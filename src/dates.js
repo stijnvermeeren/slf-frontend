@@ -27,5 +27,21 @@ export default {
     });
 
     return bestMatch;
+  },
+
+
+  /**
+   * The number of days since the UNIX epoch for the given date string (e.g. '2016-06-29').
+   */
+  dateToInt(dateString) {
+    let milliseconds = moment(dateString).valueOf();
+    return Math.round(moment.duration(milliseconds).asDays());
+  },
+
+  /**
+   * Produces the date string (e.g. '2016-06-29') for the given number of days since the UNIX epoch.
+   */
+  intToDate(int) {
+    return moment(0).add(int, "days").format("YYYY-MM-DD");
   }
 }

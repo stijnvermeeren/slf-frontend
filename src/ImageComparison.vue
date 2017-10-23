@@ -16,7 +16,7 @@
 </script>
 
 <style lang="scss">
-    $twenty-twenty-color: rgba(33,150,243,.6);
+    $twenty-twenty-color: rgba(33, 150, 243, .8);
 
     #twenty-twenty .twentytwenty-container {
         * {
@@ -39,16 +39,16 @@
 
         .twentytwenty-before-label, .twentytwenty-after-label {
             color: black;
-            background: rgba(255, 255, 255, 0.6);
+            background: $twenty-twenty-color;
+            bottom: 0;
+            top: auto;
         }
 
         .twentytwenty-overlay {
-            opacity: 0;
-            transition-property: opacity;
-            background: rgba(0, 0, 0, 0.5);
+            transition-property: none;
+            background: transparent;
         }
         .twentytwenty-overlay:hover {
-            opacity: 1;
         }
     }
 </style>
