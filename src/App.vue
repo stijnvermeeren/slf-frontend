@@ -7,7 +7,7 @@
       Loading...
     </div>
     <h2>About</h2>
-    <p>Webpage by <a href="http://stijnvermeeren.be">Stijn Vermeeren</a> (<a href="https://github.com/stijnvermeeren/slf-frontend">Github project</a>). Maps by <a href="http://www.slf.ch">SLF.ch</a>.</p>
+    <p>Webpage by <a href="http://stijnvermeeren.be">Stijn Vermeeren</a> (<a href="https://github.com/stijnvermeeren/slf-frontend-vue">Github project</a>). Maps by <a href="http://www.slf.ch">SLF.ch</a>.</p>
   </div>
 </template>
 
