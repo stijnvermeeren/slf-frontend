@@ -9,25 +9,31 @@
 
         <div>
             <ui-radio-group name="category" :options="categories" v-model="category">Map data</ui-radio-group>
-            <div>
-                <div class="year">
-                    <ui-select name="year" :options="reverseYears" v-model="year">Year</ui-select>
+            <div class="controls">
+                <div class="controlsRow">
+                    <div class="year">
+                        <ui-select name="year" :options="yearsOptions" v-model="yearOption">Year</ui-select>
+                    </div>
+                    <div class="date">
+                        <ui-select name="date" :options="availableDates" v-model="date">Date</ui-select>
+                    </div>
+                    <div class="dateSlider">
+                        <DatesSlider v-model="date" :year="year" :availableDates="availableDates"></DatesSlider>
+                    </div>
                 </div>
-                <div class="date">
-                    <ui-select name="date" :options="availableDates" v-model="date">Date</ui-select>
-                </div>
-            </div>
-            <div>
-                <DatesSlider v-model="date" :availableDates="availableDates"></DatesSlider>
-                {{date}}
             </div>
             <ui-checkbox v-model="comparisonActive">Compare with other image</ui-checkbox>
-            <div v-if="comparisonActive">
-                <div class="year">
-                    <ui-select name="compareYear" :options="reverseYears" v-model="compareYear">Year</ui-select>
-                </div>
-                <div class="date">
-                    <ui-select name="compareDate" :options="availableCompareDates" v-model="compareDate">Date</ui-select>
+            <div v-if="comparisonActive" class="controls">
+                <div class="controlsRow">
+                    <div class="year">
+                        <ui-select name="compareYear" :options="yearsOptions" v-model="compareYearOption">Year</ui-select>
+                    </div>
+                    <div class="date">
+                        <ui-select name="compareDate" :options="availableCompareDates" v-model="compareDate">Date</ui-select>
+                    </div>
+                    <div class="dateSlider">
+                        <DatesSlider v-model="compareDate" :year="compareYear" :availableDates="availableCompareDates"></DatesSlider>
+                    </div>
                 </div>
             </div>
         </div>
@@ -44,10 +50,16 @@
       data() {
         return {
           comparisonActive: false,
-          year: this.initialYear,
+          yearOption: {
+            value: this.initialYear,
+            label: '' + this.initialYear
+          },
           category: this.initialCategory,
           date: this.initialDate,
-          compareYear: this.initialYear,
+          compareYearOption: {
+            value: this.initialYear,
+            label: '' + this.initialYear
+          },
           compareDate: this.initialDate,
           categories: [
             {
@@ -74,14 +86,25 @@
         }
       },
       computed: {
+        year() {
+          return this.yearOption.value;
+        },
+        compareYear() {
+          return this.compareYearOption.value;
+        },
         imageUrl() {
           return this.$store.getters.imageUrl(this.year, this.category, this.date);
         },
         compareImageUrl() {
           return this.$store.getters.imageUrl(this.compareYear, this.category, this.compareDate);
         },
-        reverseYears() {
-          return this.$store.getters.years.reverse()
+        yearsOptions() {
+          return this.$store.getters.years.map(year => {
+            return {
+              label: '' + year,
+              value: year
+            }
+          }).reverse();
         },
         availableDates() {
           return this.$store.getters.availableDates(this.year, this.category)
@@ -124,13 +147,25 @@
         width: 800px;
     }
 
+    div.controls {
+        display: table;
+        width: 100%;
+    }
+    div.controlsRow {
+        display: table-row;
+    }
     div.year {
-        width: 100px;
-        display: inline-block;
+        width: 60px;
+        display: table-cell;
     }
     div.date {
-        margin-left: 40px;
-        width: 650px;
-        display: inline-block;
+        width: 110px;
+        padding-left: 10px;
+        display: table-cell;
+    }
+    div.dateSlider {
+        padding-left: 10px;
+        width: 450px;
+        display: table-cell;
     }
 </style>

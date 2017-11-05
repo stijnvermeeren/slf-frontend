@@ -9,7 +9,7 @@ export default new Vuex.Store({
   },
   getters: {
     years: state => {
-      return Object.keys(state.images).sort();
+      return Object.keys(state.images).sort().map(Number);
     },
     currentYear: (state, getters) => {
       let years = getters.years;

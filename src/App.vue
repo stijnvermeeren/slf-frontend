@@ -6,9 +6,8 @@
     <div v-else>
       Loading...
     </div>
-    <ui-collapsible title="About">
-      Webpage by <a href="http://stijnvermeeren.be">Stijn Vermeeren</a> (<a href="https://github.com/stijnvermeeren/slf-frontend">Github project</a>). Maps by <a href="http://www.slf.ch">SLF.ch</a>.
-    </ui-collapsible>
+    <h2>About</h2>
+    <p>Webpage by <a href="http://stijnvermeeren.be">Stijn Vermeeren</a> (<a href="https://github.com/stijnvermeeren/slf-frontend">Github project</a>). Maps by <a href="http://www.slf.ch">SLF.ch</a>.</p>
   </div>
 </template>
 
@@ -45,13 +44,16 @@
     margin: 0 auto;
   }
 
-  *,
-  *::before,
-  *::after {
+  /* apply a natural box layout model to all elements, but allowing components to change */
+  html {
     box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
   }
 
   html {
     font-size: 100%;
+    font-family: Roboto, sans-serif;
   }
 </style>
