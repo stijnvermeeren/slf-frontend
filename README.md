@@ -8,6 +8,6 @@ The [SLF](https://www.slf.ch/en.html) is the Swiss institute for snow and avalan
 * How did the snow depth evolve over the course of the winter?
 * How much snow is there currently, compared to the date of a particular photo or ski touring report (e.g. [Gipfelbuch](http://www.gipfelbuch.ch/gipfelbuch/verhaeltnisse), [Hikr](http://www.hikr.org/), [Camptocamp](https://www.camptocamp.org/)).
 
-This project is made using [Vue.js](https://vuejs.org/), with [Vuex](https://github.com/vuejs/vuex), [vue-resource](https://github.com/pagekit/vue-resource), [vue-twentytwenty](https://github.com/mhayes/vue-twentytwenty), [Keen UI](https://github.com/JosephusPaye/Keen-UI) and [moment.js](https://momentjs.com/).
+This project is made using [Vue.js](https://vuejs.org/), with [Vuex](https://github.com/vuejs/vuex), [vue-twentytwenty](https://github.com/mhayes/vue-twentytwenty), [Keen UI](https://github.com/JosephusPaye/Keen-UI) and [moment.js](https://momentjs.com/).
 
 Maps are crawled by my [Scala crawler](https://github.com/stijnvermeeren/slf-crawler) every day at 10am and 6pm Central European Time and served from an [Amazon S3](https://aws.amazon.com/s3/) bucket.

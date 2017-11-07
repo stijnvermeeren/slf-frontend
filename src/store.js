@@ -47,7 +47,7 @@ export default new Vuex.Store({
   },
   actions: {
     load(context) {
-      Vue.http.get('https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be/data.json').then(
+      fetch('https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be/data.json').then(
         response => response.json()
       ).then(json => {
         context.commit('update', json);
