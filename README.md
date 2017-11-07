@@ -1,8 +1,8 @@
-# Viewer for SLF maps
+# SLF map viewer
 
 **Visit the web page at [https://stijnvermeeren.be/slf](https://stijnvermeeren.be/slf).**
 
-A web page that aims to make the maps from the [SLF archive](https://www.slf.ch/de/lawinenbulletin-und-schneesituation/archiv.html) more accessible, giving easy insights into questions like:
+The [SLF](https://www.slf.ch/en.html) is the Swiss institute for snow and avalanche research. Each winter, they regularly publish maps charting the snowfall and snow depth across Switzerland. This web page aims to make the maps from the [SLF archive](https://www.slf.ch/de/lawinenbulletin-und-schneesituation/archiv.html) more accessible, giving easy insights into questions like:
 
 * How much snow is there compared to last year?
 * How did the snow depth evolve over the course of the winter?
