@@ -8,13 +8,14 @@
     </div>
     <div class="about">
       <h2>About</h2>
-      <p>This webpage aims to make the maps from the <a href="https://www.slf.ch/de/lawinenbulletin-und-schneesituation/archiv.html">SLF archive</a> more accessible, giving easy insights into questions like:</p>
+      <p>This web page aims to make the maps from the <a href="https://www.slf.ch/de/lawinenbulletin-und-schneesituation/archiv.html">SLF archive</a> more accessible, giving easy insights into questions like:</p>
       <ul>
         <li>How much snow is there compared to last year?</li>
         <li>How did the snow depth evolve over the course of the winter?</li>
         <li>How much snow is there currently, compared to the date of a particular photo or ski touring report (e.g. <a href="http://www.gipfelbuch.ch/gipfelbuch/verhaeltnisse">Gipfelbuch</a>, <a href="http://www.hikr.org/">Hikr</a>, <a href="https://www.camptocamp.org/">Camptocamp</a>).</li>
       </ul>
-      <p>Webpage by <a href="http://stijnvermeeren.be">Stijn Vermeeren</a> (<a href="https://github.com/stijnvermeeren/slf-frontend">Github project</a>). Maps by <a href="http://www.slf.ch">SLF.ch</a>.</p>
+      <p>New maps are loaded from the SLF website every day at 10am and at 6pm Central European Time.</p>
+      <p>Web page by <a href="http://stijnvermeeren.be">Stijn Vermeeren</a> (<a href="https://github.com/stijnvermeeren/slf-frontend">Github project</a>). Maps by <a href="http://www.slf.ch">SLF.ch</a>.</p>
     </div>
   </div>
 </template>
