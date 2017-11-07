@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="segment">
-            <ui-checkbox v-model="comparisonActive">Compare with other image</ui-checkbox>
+            <ui-switch v-model="comparisonActive">Compare with a different date <span v-if="comparisonActive" class="hint">(click on the map to adjust the comparison)</span></ui-switch>
             <div v-if="comparisonActive">
                 <div class="controls">
                     <div class="controlsRow">
@@ -41,6 +41,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="hint">Comparison date will stay in sync when changing the main date</div>
             </div>
         </div>
     </div>
@@ -55,13 +56,39 @@
       props: ['initialYear', 'initialCategory', 'initialDate'],
       data() {
         return {
+          onLatestDate: true,
           comparisonActive: false,
           yearOption: this.yearToOption(this.initialYear),
           category: this.initialCategory,
           date: this.initialDate,
           compareYearOption: this.yearToOption(this.initialYear),
-          compareDate: this.initialDate,
-          categories: [
+          compareDate: this.initialDate
+        }
+      },
+      computed: {
+        year() {
+          return this.yearOption.value;
+        },
+        compareYear() {
+          return this.compareYearOption.value;
+        },
+        imageUrl() {
+          return this.$store.getters.imageUrl(this.year, this.category, this.date);
+        },
+        compareImageUrl() {
+          return this.$store.getters.imageUrl(this.compareYear, this.category, this.compareDate);
+        },
+        yearsOptions() {
+          return this.$store.getters.years.map(this.yearToOption).reverse();
+        },
+        availableDates() {
+          return [...this.$store.getters.availableDates(this.year, this.category)].reverse();
+        },
+        availableCompareDates() {
+          return [...this.$store.getters.availableDates(this.compareYear, this.category)].reverse();
+        },
+        categories() {
+          const categories = [
             {
               'value': 'depth',
               'label': 'Depth'
@@ -82,40 +109,30 @@
               'value': '3days',
               'label': 'New snow 3 days'
             }
-          ]
-        }
-      },
-      computed: {
-        year() {
-          return this.yearOption.value;
-        },
-        compareYear() {
-          return this.compareYearOption.value;
-        },
-        imageUrl() {
-          return this.$store.getters.imageUrl(this.year, this.category, this.date);
-        },
-        compareImageUrl() {
-          return this.$store.getters.imageUrl(this.compareYear, this.category, this.compareDate);
-        },
-        yearsOptions() {
-          return this.$store.getters.years.map(this.yearToOption).reverse();
-        },
-        availableDates() {
-          return this.$store.getters.availableDates(this.year, this.category)
-        },
-        availableCompareDates() {
-          return this.$store.getters.availableDates(this.compareYear, this.category)
+          ];
+
+          return categories.map(category => {
+            category.disabled = this.$store.getters.availableDates(this.year, category.value).length === 0;
+            console.log(category);
+            return category;
+          })
         }
       },
       watch: {
         year: function() {
+          if (this.availableDates.length === 0) {
+            this.category = 'at2000m';
+          }
           this.checkDate();
         },
         category: function() {
+          if (this.onLatestDate) {
+            this.date = this.availableDates[0];
+          }
           this.checkDate();
         },
         date: function() {
+          this.onLatestDate = (this.year === this.initialYear && this.date === this.availableDates[0]);
           this.checkCompareDate();
         },
         compareYear: function() {
@@ -125,7 +142,7 @@
       methods: {
         yearToOption(year) {
           return {
-            label: (year - 1) + "-'" + (year % 100),
+            label: String(year - 1) + "-'" + String(year % 100).padStart(2, '0'),
             value: year
           }
         },
@@ -148,6 +165,10 @@
         width: 800px;
     }
 
+    .hint {
+        color: rgba(0, 0, 0, 0.54)
+    }
+
     div.segment {
         margin-top: 10px;
 
@@ -159,17 +180,17 @@
                 display: table-row;
 
                 div.year {
-                    width: 60px;
+                    width: 80px;
                     display: table-cell;
                 }
                 div.date {
-                    width: 110px;
+                    width: 120px;
                     padding-left: 10px;
                     display: table-cell;
                 }
                 div.dateSlider {
                     padding-left: 10px;
-                    width: 450px;
+                    width: 420px;
                     display: table-cell;
                 }
             }
