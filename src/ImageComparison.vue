@@ -18,6 +18,10 @@
 <style lang="scss">
     $twenty-twenty-color: rgba(33, 150, 243, .8);
 
+    img {
+        width: 800px;
+    }
+
     #twenty-twenty .twentytwenty-container {
         * {
             box-sizing: content-box;

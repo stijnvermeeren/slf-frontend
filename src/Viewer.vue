@@ -14,15 +14,15 @@
             <div class="controls">
                 <div class="controlsRow">
                     <div class="year">
-                        <ui-select name="year" :options="yearsOptions" v-model="yearOption">Year</ui-select>
+                        <SelectWithArrows name="year" :options="yearsOptions" v-model="yearOption">Year</SelectWithArrows>
                     </div>
                     <div class="date">
-                        <ui-select name="date" :options="availableDates" v-model="date">Date</ui-select>
-                    </div>
-                    <div class="dateSlider">
-                        <DatesSlider v-model="date" :year="year" :availableDates="availableDates"></DatesSlider>
+                        <SelectWithArrows name="date" :options="availableDates" v-model="date">Date</SelectWithArrows>
                     </div>
                 </div>
+            </div>
+            <div class="dateSlider">
+                <DatesSlider v-model="date" :year="year" :availableDates="availableDates"></DatesSlider>
             </div>
         </div>
         <div class="segment">
@@ -31,15 +31,15 @@
                 <div class="controls">
                     <div class="controlsRow">
                         <div class="year">
-                            <ui-select name="compareYear" :options="yearsOptions" v-model="compareYearOption">Year</ui-select>
+                            <SelectWithArrows name="compareYear" :options="yearsOptions" v-model="compareYearOption">Year</SelectWithArrows>
                         </div>
                         <div class="date">
-                            <ui-select name="compareDate" :options="availableCompareDates" v-model="compareDate">Date</ui-select>
-                        </div>
-                        <div class="dateSlider">
-                            <DatesSlider v-model="compareDate" :year="compareYear" :availableDates="availableCompareDates"></DatesSlider>
+                            <SelectWithArrows name="compareDate" :options="availableCompareDates" v-model="compareDate">Date</SelectWithArrows>
                         </div>
                     </div>
+                </div>
+                <div class="dateSlider">
+                    <DatesSlider v-model="compareDate" :year="compareYear" :availableDates="availableCompareDates"></DatesSlider>
                 </div>
                 <div class="hint">Comparison date will stay in sync when changing the main date</div>
             </div>
@@ -49,8 +49,9 @@
 
 <script>
     import dates from './dates';
-    import ImageComparison from './ImageComparison.vue';
     import DatesSlider from './DatesSlider.vue';
+    import ImageComparison from './ImageComparison.vue';
+    import SelectWithArrows from './SelectWithArrows.vue';
 
     export default {
       props: ['initialYear', 'initialCategory', 'initialDate'],
@@ -142,7 +143,7 @@
       methods: {
         yearToOption(year) {
           return {
-            label: String(year - 1) + "-'" + String(year % 100).padStart(2, '0'),
+            label: String(year - 1) + " - '" + String(year % 100).padStart(2, '0'),
             value: year
           }
         },
@@ -155,43 +156,36 @@
       },
       components: {
         ImageComparison,
+        SelectWithArrows,
         DatesSlider
       }
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     img {
         width: 800px;
     }
 
     .hint {
+        margin-top: 10px;
         color: rgba(0, 0, 0, 0.54)
     }
 
     div.segment {
-        margin-top: 10px;
+        margin-top: 20px;
 
         div.controls {
             display: table;
             width: 100%;
+            margin-bottom: 10px;
 
             div.controlsRow {
                 display: table-row;
 
-                div.year {
-                    width: 80px;
+                div.year, div.date {
                     display: table-cell;
-                }
-                div.date {
-                    width: 120px;
-                    padding-left: 10px;
-                    display: table-cell;
-                }
-                div.dateSlider {
-                    padding-left: 10px;
-                    width: 420px;
-                    display: table-cell;
+                    text-align: center;
                 }
             }
         }
