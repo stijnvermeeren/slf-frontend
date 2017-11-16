@@ -23,10 +23,6 @@
     }
 
     #twenty-twenty .twentytwenty-container {
-        * {
-            box-sizing: content-box;
-        }
-
         .twentytwenty-handle:before, .twentytwenty-handle:after {
             border-color: $twenty-twenty-color;
         }
@@ -49,10 +45,7 @@
         }
 
         .twentytwenty-overlay {
-            transition-property: none;
             background: transparent;
-        }
-        .twentytwenty-overlay:hover {
         }
     }
 </style>
