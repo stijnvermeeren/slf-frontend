@@ -6,7 +6,13 @@
                 ariaLabel="previous"
                 :disabled="nextValue === undefined"
                 @click="innerValue = nextValue" />
-        <ui-select :name="name" :options="options" v-model="innerValue"><slot /></ui-select>
+        <ui-select
+                :name="name"
+                :options="innerOptions"
+                v-model="innerValue"
+                :disabled="!enabled"
+                placeholder="No data"
+        ><slot /></ui-select>
         <ui-icon-button
                 icon="chevron_right"
                 size="small"
@@ -21,10 +27,16 @@
       props: ['options', 'value', 'name'],
       data() {
         return {
-          innerValue: this.value
+          innerValue: this.value || ''
         }
       },
       computed: {
+        enabled() {
+          return this.options.length > 0;
+        },
+        innerOptions() {
+          return this.options;
+        },
         currentIndex() {
           return this.options.findIndex(item => {
             if (typeof(item) === 'string')
@@ -50,7 +62,7 @@
           this.$emit('input', newValue);
         },
         value(newValue) {
-          this.innerValue = newValue;
+          this.innerValue = newValue || '';
         }
       }
     }

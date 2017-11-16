@@ -3,7 +3,7 @@
         <div v-if="comparisonActive">
             <ImageComparison :image="imageUrl" :date="date" :compareImage="compareImageUrl" :compareDate="compareDate"/>
         </div>
-        <div v-else>
+        <div v-else class="imageContainer">
             <img :src="imageUrl" alt="Image" />
         </div>
 
@@ -89,7 +89,7 @@
           return [...this.$store.getters.availableDates(this.compareYear, this.category)].reverse();
         },
         categories() {
-          const categories = [
+          return [
             {
               'value': 'depth',
               'label': 'Depth'
@@ -111,19 +111,10 @@
               'label': 'New snow 3 days'
             }
           ];
-
-          return categories.map(category => {
-            category.disabled = this.$store.getters.availableDates(this.year, category.value).length === 0;
-            console.log(category);
-            return category;
-          })
         }
       },
       watch: {
         year: function() {
-          if (this.availableDates.length === 0) {
-            this.category = 'at2000m';
-          }
           this.checkDate();
         },
         category: function() {
@@ -163,8 +154,11 @@
 </script>
 
 <style lang="scss" scoped>
-    img {
-        width: 800px;
+    div.imageContainer {
+        min-height: 565px;
+        img {
+            width: 800px;
+        }
     }
 
     .hint {

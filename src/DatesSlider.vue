@@ -1,7 +1,14 @@
 <template>
     <div>
         <div>
-            <CustomSlider v-model="dateValue" :minValue="minValue" :maxValue="maxValue" :steps="steps" snapToSteps></CustomSlider>
+            <CustomSlider
+                    v-model="dateValue"
+                    :minValue="minValue"
+                    :maxValue="maxValue"
+                    :steps="steps"
+                    :disabled="steps.length === 0"
+                    snapToSteps
+            ></CustomSlider>
         </div>
         <div class="months">
             <span :style="monthStyle(10)">Oct</span><span :style="monthStyle(11)">Nov</span><span :style="monthStyle(12)">Dec</span><span :style="monthStyle(1)">Jan</span><span :style="monthStyle(2)">Feb</span><span :style="monthStyle(3)">Mar</span><span :style="monthStyle(4)">Apr</span><span :style="monthStyle(5)">May</span><span :style="monthStyle(6)">Jun</span>

@@ -1,6 +1,6 @@
 <template>
     <div id="twenty-twenty">
-        <TwentyTwenty :before="image" :beforeLabel="date" :after="compareImage" :afterLabel="compareDate" />
+        <TwentyTwenty :before="image" :beforeLabel="date || 'No data'" :after="compareImage" :afterLabel="compareDate || 'No data'" />
     </div>
 </template>
 
@@ -46,6 +46,7 @@
 
         .twentytwenty-overlay {
             background: transparent;
+            opacity: 1;
         }
     }
 </style>
