@@ -1,16 +1,22 @@
 <template>
     <div id="twenty-twenty">
-        <TwentyTwenty :before="image" :beforeLabel="date || 'No data'" :after="compareImage" :afterLabel="compareDate || 'No data'" />
+        <TwentyTwenty :before="image" :beforeLabel="dateLabel(date)" :after="compareImage" :afterLabel="dateLabel(compareDate)" />
     </div>
 </template>
 
 <script>
     import TwentyTwenty from 'vue-twentytwenty';
+    import dates from './dates';
 
     export default {
         props: ['image', 'date', 'compareImage', 'compareDate'],
         components: {
           TwentyTwenty
+        },
+        methods: {
+          dateLabel(date) {
+            return date ? dates.fullFormat(date) : 'No data';
+          }
         }
     }
 </script>

@@ -7,49 +7,40 @@
             <img :src="imageUrl" alt="Image" />
         </div>
 
-        <div class="segment">
-            <ui-radio-group name="category" :options="categories" v-model="category">Map data</ui-radio-group>
-        </div>
-        <div class="segment">
+        <div class="dateSelect left">
             <div class="controls">
-                <div class="controlsRow">
-                    <div class="year">
-                        <SelectWithArrows name="year" :options="yearsOptions" v-model="yearOption">Year</SelectWithArrows>
-                    </div>
-                    <div class="date">
-                        <SelectWithArrows name="date" :options="availableDates" v-model="date">Date</SelectWithArrows>
-                    </div>
+                <div class="year">
+                    <SelectWithArrows name="year" :options="yearsOptions" v-model="yearOption">Year</SelectWithArrows>
+                </div>
+                <div class="date">
+                    <SelectWithArrows name="date" :options="availableDates" v-model="dateOption">Date</SelectWithArrows>
                 </div>
             </div>
-            <div class="dateSlider">
-                <DatesSlider v-model="date" :year="year" :availableDates="availableDates"></DatesSlider>
-            </div>
         </div>
-        <div class="segment">
-            <ui-switch v-model="comparisonActive">Compare with a different date <span v-if="comparisonActive" class="hint">(click on the map to adjust the comparison)</span></ui-switch>
+        <div class="dateSelect right">
+            <ui-switch v-model="comparisonActive">Compare with a different date</ui-switch>
             <div v-if="comparisonActive">
                 <div class="controls">
-                    <div class="controlsRow">
-                        <div class="year">
-                            <SelectWithArrows name="compareYear" :options="yearsOptions" v-model="compareYearOption">Year</SelectWithArrows>
-                        </div>
-                        <div class="date">
-                            <SelectWithArrows name="compareDate" :options="availableCompareDates" v-model="compareDate">Date</SelectWithArrows>
-                        </div>
+                    <div class="year">
+                        <SelectWithArrows name="compareYear" :options="yearsOptions" v-model="compareYearOption">Year</SelectWithArrows>
+                    </div>
+                    <div class="date">
+                        <SelectWithArrows name="compareDate" :options="availableCompareDates" v-model="compareDateOption">Date</SelectWithArrows>
                     </div>
                 </div>
-                <div class="dateSlider">
-                    <DatesSlider v-model="compareDate" :year="compareYear" :availableDates="availableCompareDates"></DatesSlider>
-                </div>
-                <div class="hint">Comparison date will stay in sync when changing the main date</div>
+                <div class="hint">Click on the map to adjust the comparison</div>
             </div>
+        </div>
+        <div class="clear"></div>
+        <div class="dataSelect">
+            <ui-radio-group name="category" :options="categories" v-model="category">Map data</ui-radio-group>
         </div>
     </div>
 </template>
 
 <script>
+    import moment from 'moment';
     import dates from './dates';
-    import DatesSlider from './DatesSlider.vue';
     import ImageComparison from './ImageComparison.vue';
     import SelectWithArrows from './SelectWithArrows.vue';
 
@@ -61,9 +52,9 @@
           comparisonActive: false,
           yearOption: this.yearToOption(this.initialYear),
           category: this.initialCategory,
-          date: this.initialDate,
+          dateOption: this.dateStringToOption(this.initialDate),
           compareYearOption: this.yearToOption(this.initialYear),
-          compareDate: this.initialDate
+          compareDateOption: this.dateStringToOption(this.initialDate)
         }
       },
       computed: {
@@ -72,6 +63,12 @@
         },
         compareYear() {
           return this.compareYearOption.value;
+        },
+        date() {
+          return this.dateOption ? this.dateOption.value : undefined;
+        },
+        compareDate() {
+          return this.compareDateOption ? this.compareDateOption.value : undefined;
         },
         imageUrl() {
           return this.$store.getters.imageUrl(this.year, this.category, this.date);
@@ -83,10 +80,14 @@
           return this.$store.getters.years.map(this.yearToOption).reverse();
         },
         availableDates() {
-          return [...this.$store.getters.availableDates(this.year, this.category)].reverse();
+          return [...this.$store.getters.availableDates(this.year, this.category)]
+            .reverse()
+            .map(this.dateStringToOption);
         },
         availableCompareDates() {
-          return [...this.$store.getters.availableDates(this.compareYear, this.category)].reverse();
+          return [...this.$store.getters.availableDates(this.compareYear, this.category)]
+            .reverse()
+            .map(this.dateStringToOption);
         },
         categories() {
           return [
@@ -138,17 +139,32 @@
             value: year
           }
         },
+        dateStringToOption(dateString) {
+          return {
+            label: dates.fullFormat(moment(dateString)),
+            value: dateString
+          }
+        },
         checkDate() {
-          this.date = dates.findClosest(this.date, this.availableDates);
+          if (this.date) {
+            this.dateOption = dates.findClosest(this.date, this.availableDates);
+          } else if (this.availableDates.length > 0) {
+            this.dateOption = this.availableDates[0];
+          }
         },
         checkCompareDate() {
-          this.compareDate = dates.findClosest(this.date, this.availableCompareDates);
+          if (this.date) {
+            this.compareDateOption = dates.findClosest(this.date, this.availableCompareDates);
+          } else if (this.compareDate) {
+            this.compareDateOption = dates.findClosest(this.compareDate, this.availableCompareDates);
+          } else if (this.availableCompareDates.length > 0) {
+            this.compareDateOption = this.availableCompareDates[0];
+          }
         }
       },
       components: {
         ImageComparison,
-        SelectWithArrows,
-        DatesSlider
+        SelectWithArrows
       }
     }
 </script>
@@ -166,22 +182,30 @@
         color: rgba(0, 0, 0, 0.54)
     }
 
-    div.segment {
+    div.dataSelect {
         margin-top: 20px;
+    }
+
+    div.dateSelect {
+        margin-top: 20px;
+        width: 380px;
+        &.right {
+            float: right;
+        }
+        &.left {
+            float: left;
+        }
 
         div.controls {
-            display: table;
             width: 100%;
             margin-bottom: 10px;
 
-            div.controlsRow {
-                display: table-row;
-
-                div.year, div.date {
-                    display: table-cell;
-                    text-align: center;
-                }
+            div.year, div.date {
+                text-align: center;
             }
         }
+    }
+    div.clear {
+        clear: both;
     }
 </style>

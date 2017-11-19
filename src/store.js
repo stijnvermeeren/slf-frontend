@@ -18,16 +18,19 @@ export default new Vuex.Store({
     availableDates: state => (year, category) => {
       if (state.images[year] && state.images[year][category]) {
         return state.images[year][category].map(
-          //remove the file extension from the date-named image);
+          // remove the file extension from the date-named image
           fileName => fileName.split(".")[0]
         ).sort();
       } else {
         return [];
       }
     },
-    imageUrl: state => (year, category, date) => {
+    imageUrl: state => (year, category, dateString) => {
       if (state.images[year] && state.images[year][category]) {
-        let fileName = state.images[year][category].find(fileName => fileName.split(".")[0] === date);
+        const fileName = state.images[year][category].find(
+          fileName => fileName.split(".")[0] === dateString
+        );
+
         if (fileName) {
           return [
             "https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be",
@@ -51,6 +54,9 @@ export default new Vuex.Store({
   },
   actions: {
     load(context) {
+      /**
+       * Format: {"2014":{"relative":["2013-11-28.gif","2013-12-05.gif",...],...},...}
+       */
       fetch('https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be/data.json').then(
         response => response.json()
       ).then(json => {

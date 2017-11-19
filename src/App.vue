@@ -15,13 +15,14 @@
         <li>How much snow is there currently, compared to the date of a particular photo or ski touring report (e.g. <a href="http://www.gipfelbuch.ch/gipfelbuch/verhaeltnisse">Gipfelbuch</a>, <a href="http://www.hikr.org/">Hikr</a>, <a href="https://www.camptocamp.org/">Camptocamp</a>).</li>
       </ul>
       <p>New maps are loaded from the SLF website every day at 10am and at 6pm Central European Time.</p>
-      <p>Web page by <a href="http://stijnvermeeren.be">Stijn Vermeeren</a> (<a href="https://github.com/stijnvermeeren/slf-frontend">Github project</a>). Maps by <a href="http://www.slf.ch">SLF.ch</a>.</p>
+      <p>Maps by <a href="http://www.slf.ch">SLF.ch</a>. Web page by <a href="https://stijnvermeeren.be">Stijn Vermeeren</a> (<a href="https://github.com/stijnvermeeren/slf-frontend">Github project</a>). <a href="https://stijnvermeeren.be/contact">Feedback</a> welcome.</p>
     </div>
   </div>
 </template>
 
 <script>
   import Viewer from './Viewer.vue'
+  import moment from 'moment';
 
   export default {
     data() {
@@ -34,8 +35,8 @@
         return this.$store.getters.currentYear;
       },
       initialDate() {
-        let availableDates = this.$store.getters.availableDates(this.initialYear, this.initialCategory);
-        return availableDates[availableDates.length - 1];
+        const availableDates = this.$store.getters.availableDates(this.initialYear, this.initialCategory);
+        return moment(availableDates[availableDates.length - 1]);
       }
     },
     components: {
@@ -67,9 +68,12 @@
   }
 
   div.about {
-    background-color: rgba(0, 0, 0, 0.24);
-    margin: 20px 0;
+    margin: 40px 20px;
     padding: 10px;
+
+    background-color: #eeeeee;
+    border-radius: 2px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 
     h2 {
       margin-top: 10px;

@@ -1,5 +1,5 @@
 
-let moment = require('moment');
+import moment from 'moment';
 
 export default {
 
@@ -13,35 +13,23 @@ export default {
     return givenDate.diff(august1st, "days");
   },
 
-  findClosest(needle, haystack) {
-    let target = this.dateToIntRelative(needle);
+  findClosest(dateString, options) {
+    let target = this.dateToIntRelative(dateString);
     let minDiff;
     let bestMatch;
 
-    haystack.forEach(date => {
-      let diff = Math.abs(this.dateToIntRelative(date) - target);
+    options.forEach(option => {
+      let diff = Math.abs(this.dateToIntRelative(option.value) - target);
       if (minDiff === undefined || diff < minDiff) {
         minDiff = diff;
-        bestMatch = date;
+        bestMatch = option;
       }
     });
 
     return bestMatch;
   },
 
-
-  /**
-   * The number of days since the UNIX epoch for the given date string (e.g. '2016-06-29').
-   */
-  dateToInt(dateString) {
-    let milliseconds = moment(dateString).valueOf();
-    return Math.round(moment.duration(milliseconds).asDays());
-  },
-
-  /**
-   * Produces the date string (e.g. '2016-06-29') for the given number of days since the UNIX epoch.
-   */
-  intToDate(int) {
-    return moment(0).add(int, "days").format("YYYY-MM-DD");
+  fullFormat(dateString) {
+    return moment(dateString).format("D MMMM YYYY");
   }
 }
