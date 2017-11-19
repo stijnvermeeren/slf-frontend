@@ -22,7 +22,6 @@
 
 <script>
   import Viewer from './Viewer.vue'
-  import moment from 'moment';
 
   export default {
     data() {
@@ -36,7 +35,7 @@
       },
       initialDate() {
         const availableDates = this.$store.getters.availableDates(this.initialYear, this.initialCategory);
-        return moment(availableDates[availableDates.length - 1]);
+        return availableDates[availableDates.length - 1];
       }
     },
     components: {
