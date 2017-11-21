@@ -45,6 +45,7 @@
 
         .twentytwenty-before-label, .twentytwenty-after-label {
             color: black;
+            font-weight: bold;
             background: $twenty-twenty-color;
             bottom: 0;
             top: auto;

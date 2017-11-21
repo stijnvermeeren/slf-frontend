@@ -3,37 +3,36 @@
         <ui-icon-button
                 icon="chevron_left"
                 size="small"
+                color="primary"
                 ariaLabel="previous"
-                :disabled="nextValue === undefined"
+                :disabled="disabled || nextValue === undefined"
                 @click="innerValue = nextValue" />
         <ui-select
                 :name="name"
                 :options="innerOptions"
                 v-model="innerValue"
-                :disabled="!enabled"
+                :disabled="disabled || options.length == 0"
                 placeholder="No data"
         ><slot /></ui-select>
         <ui-icon-button
                 icon="chevron_right"
                 size="small"
+                color="primary"
                 ariaLabel="next"
-                :disabled="previousValue === undefined"
+                :disabled="disabled || previousValue === undefined"
                 @click="innerValue = previousValue" />
     </div>
 </template>
 
 <script>
     export default {
-      props: ['options', 'value', 'name'],
+      props: ['options', 'value', 'name', 'disabled'],
       data() {
         return {
           innerValue: this.value || ''
         }
       },
       computed: {
-        enabled() {
-          return this.options.length > 0;
-        },
         innerOptions() {
           return this.options;
         },
@@ -80,5 +79,9 @@
 
     * {
         box-sizing: content-box;
+    }
+
+    .ui-select {
+        width: 250px;
     }
 </style>

@@ -1,13 +1,16 @@
 <template>
     <div>
-        <div v-if="comparisonActive">
-            <ImageComparison :image="imageUrl" :date="date" :compareImage="compareImageUrl" :compareDate="compareDate"/>
-        </div>
-        <div v-else class="imageContainer">
-            <img :src="imageUrl" alt="Image" />
+        <div class="imageContainer">
+            <div v-if="comparisonActive">
+                <ImageComparison :image="imageUrl" :date="date" :compareImage="compareImageUrl" :compareDate="compareDate"/>
+            </div>
+            <div v-else>
+                <img :src="imageUrl" alt="Image" />
+            </div>
         </div>
 
         <div class="dateSelect left">
+            <div class="leftHeader">Select a date for the map</div>
             <div class="controls">
                 <div class="year">
                     <SelectWithArrows name="year" :options="yearsOptions" v-model="yearOption">Year</SelectWithArrows>
@@ -19,13 +22,23 @@
         </div>
         <div class="dateSelect right">
             <ui-switch v-model="comparisonActive">Compare with a different date</ui-switch>
-            <div v-if="comparisonActive">
+            <div>
                 <div class="controls">
                     <div class="year">
-                        <SelectWithArrows name="compareYear" :options="yearsOptions" v-model="compareYearOption">Year</SelectWithArrows>
+                        <SelectWithArrows
+                                name="compareYear"
+                                :options="yearsOptions"
+                                v-model="compareYearOption"
+                                :disabled="!comparisonActive"
+                        >Year</SelectWithArrows>
                     </div>
                     <div class="date">
-                        <SelectWithArrows name="compareDate" :options="availableCompareDates" v-model="compareDateOption">Date</SelectWithArrows>
+                        <SelectWithArrows
+                                name="compareDate"
+                                :options="availableCompareDates"
+                                v-model="compareDateOption"
+                                :disabled="!comparisonActive"
+                        >Date</SelectWithArrows>
                     </div>
                 </div>
                 <div class="hint">Click on the map to adjust the comparison</div>
@@ -120,12 +133,12 @@
         },
         category: function() {
           if (this.onLatestDate) {
-            this.date = this.availableDates[0];
+            this.dateOption = this.availableDates[0];
           }
           this.checkDate();
         },
         date: function() {
-          this.onLatestDate = (this.year === this.initialYear && this.date === this.availableDates[0]);
+          this.onLatestDate = (this.year === this.initialYear && this.dateOption.value === this.availableDates[0].value);
           this.checkCompareDate();
         },
         compareYear: function() {
@@ -171,7 +184,7 @@
 
 <style lang="scss" scoped>
     div.imageContainer {
-        min-height: 565px;
+        min-height: 570px;
         img {
             width: 800px;
         }
@@ -193,6 +206,10 @@
             float: right;
         }
         &.left {
+            div.leftHeader {
+                height: 2rem;
+                font-size: 0.9375rem;
+            }
             float: left;
         }
 
