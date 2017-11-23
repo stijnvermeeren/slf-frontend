@@ -42,6 +42,7 @@
       Viewer
     },
     created() {
+      this.$ga.page('/');
       this.$store.dispatch('load');
     },
   }
