@@ -65,6 +65,11 @@
   html {
     font-size: 100%;
     font-family: Roboto, sans-serif;
+
+    text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
   }
 
   div.about {
