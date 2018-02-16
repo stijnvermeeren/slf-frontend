@@ -50,7 +50,7 @@
 
 <style lang="scss">
   div#container {
-    width: 800px;
+    width: 1000px;
     margin: 0 auto;
   }
 

@@ -19,7 +19,7 @@ export default {
     let bestMatch;
 
     options.forEach(option => {
-      const diff = Math.abs(this.dateToIntRelative(option.value) - target);
+      const diff = Math.abs(this.dateToIntRelative(option) - target);
       if (minDiff === undefined || diff < minDiff) {
         minDiff = diff;
         bestMatch = option;

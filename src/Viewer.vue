@@ -1,52 +1,65 @@
 <template>
-    <div>
-        <div class="imageContainer">
-            <div v-if="comparisonActive">
-                <ImageComparison :image="imageUrl" :date="date" :compareImage="compareImageUrl" :compareDate="compareDate"/>
-            </div>
-            <div v-else>
-                <img :src="imageUrl" alt="Image" />
-            </div>
-        </div>
+    <div class="grid">
+        <CategorySelect v-model="category" :year="year" :date="date" />
 
-        <div class="dateSelect left">
-            <div class="leftHeader">Select a date for the map</div>
-            <div class="controls">
-                <div class="year">
-                    <SelectWithArrows name="year" :options="yearsOptions" v-model="yearOption">Year</SelectWithArrows>
+        <div>
+            <div class="imageContainer">
+                <div v-if="comparisonActive">
+                    <ImageComparison :image="imageUrl" :date="date" :compareImage="compareImageUrl" :compareDate="compareDate"/>
                 </div>
-                <div class="date">
-                    <SelectWithArrows name="date" :options="availableDates" v-model="dateOption">Date</SelectWithArrows>
+                <div v-else>
+                    <img :src="imageUrl" alt="Image" />
                 </div>
             </div>
-        </div>
-        <div class="dateSelect right">
-            <ui-switch v-model="comparisonActive">Compare with a different date</ui-switch>
-            <div>
+
+            <div class="dateSelect left">
+                <div class="leftHeader">Select a date for the map</div>
                 <div class="controls">
                     <div class="year">
                         <SelectWithArrows
-                                name="compareYear"
+                                name="year"
                                 :options="yearsOptions"
-                                v-model="compareYearOption"
-                                :disabled="!comparisonActive"
+                                :value="yearToOption(year)"
+                                @input="newOption => year = newOption.value"
                         >Year</SelectWithArrows>
                     </div>
                     <div class="date">
                         <SelectWithArrows
-                                name="compareDate"
-                                :options="availableCompareDates"
-                                v-model="compareDateOption"
-                                :disabled="!comparisonActive"
+                                name="date"
+                                :options="availableDateOptions"
+                                :value="dateStringToOption(date)"
+                                @input="newOption => date = newOption.value"
                         >Date</SelectWithArrows>
                     </div>
                 </div>
-                <div class="hint">Click on the map to adjust the comparison</div>
             </div>
-        </div>
-        <div class="clear"></div>
-        <div class="dataSelect">
-            <ui-radio-group name="category" :options="categories" v-model="category">Map data</ui-radio-group>
+            <div class="dateSelect right">
+                <ui-switch v-model="comparisonActive">Compare with a different date</ui-switch>
+                <div>
+                    <div class="controls">
+                        <div class="year">
+                            <SelectWithArrows
+                                    name="compareYear"
+                                    :options="yearsOptions"
+                                    :value="yearToOption(compareYear)"
+                                    @input="newOption => compareYear = newOption.value"
+                                    :disabled="!comparisonActive"
+                            >Year</SelectWithArrows>
+                        </div>
+                        <div class="date">
+                            <SelectWithArrows
+                                    name="compareDate"
+                                    :options="availableCompareDateOptions"
+                                    :value="dateStringToOption(compareDate)"
+                                    @input="newOption => compareDate = newOption.value"
+                                    :disabled="!comparisonActive"
+                            >Date</SelectWithArrows>
+                        </div>
+                    </div>
+                    <div class="hint">Click on the map to adjust the comparison</div>
+                </div>
+            </div>
+            <div class="clear"></div>
         </div>
     </div>
 </template>
@@ -56,6 +69,7 @@
     import dates from './dates';
     import ImageComparison from './ImageComparison.vue';
     import SelectWithArrows from './SelectWithArrows.vue';
+    import CategorySelect from './CategorySelect.vue';
 
     export default {
       props: ['initialYear', 'initialCategory', 'initialDate'],
@@ -63,26 +77,14 @@
         return {
           onLatestDate: true,
           comparisonActive: false,
-          yearOption: this.yearToOption(this.initialYear),
+          year: this.initialYear,
           category: this.initialCategory,
-          dateOption: this.dateStringToOption(this.initialDate),
-          compareYearOption: this.yearToOption(this.initialYear),
-          compareDateOption: this.dateStringToOption(this.initialDate)
+          date: this.initialDate,
+          compareYear: this.initialYear,
+          compareDate: this.initialDate
         }
       },
       computed: {
-        year() {
-          return this.yearOption.value;
-        },
-        compareYear() {
-          return this.compareYearOption.value;
-        },
-        date() {
-          return this.dateOption ? this.dateOption.value : undefined;
-        },
-        compareDate() {
-          return this.compareDateOption ? this.compareDateOption.value : undefined;
-        },
         imageUrl() {
           return this.$store.getters.imageUrl(this.year, this.category, this.date);
         },
@@ -94,38 +96,18 @@
         },
         availableDates() {
           return [...this.$store.getters.availableDates(this.year, this.category)]
-            .reverse()
-            .map(this.dateStringToOption);
+            .reverse();
         },
         availableCompareDates() {
           return [...this.$store.getters.availableDates(this.compareYear, this.category)]
-            .reverse()
-            .map(this.dateStringToOption);
+            .reverse();
         },
-        categories() {
-          return [
-            {
-              'value': 'depth',
-              'label': 'Depth'
-            },
-            {
-              'value': 'at2000m',
-              'label': 'Depth at 2000m/2500m'
-            },
-            {
-              'value': 'relative',
-              'label': 'Depth %'
-            },
-            {
-              'value': '1day',
-              'label': 'New snow 1 day'
-            },
-            {
-              'value': '3days',
-              'label': 'New snow 3 days'
-            }
-          ];
-        }
+        availableDateOptions() {
+          return this.availableDates.map(this.dateStringToOption);
+        },
+        availableCompareDateOptions() {
+          return this.availableCompareDates.map(this.dateStringToOption);
+        },
       },
       watch: {
         year: function() {
@@ -133,12 +115,12 @@
         },
         category: function() {
           if (this.onLatestDate) {
-            this.dateOption = this.availableDates[0];
+            this.date = this.availableDates[0];
           }
           this.checkDate();
         },
         date: function() {
-          this.onLatestDate = (this.year === this.initialYear && this.dateOption.value === this.availableDates[0].value);
+          this.onLatestDate = (this.year === this.initialYear && this.date === this.availableDates[0]);
           this.checkCompareDate();
         },
         compareYear: function() {
@@ -160,29 +142,35 @@
         },
         checkDate() {
           if (this.date) {
-            this.dateOption = dates.findClosest(this.date, this.availableDates);
+            this.date = dates.findClosest(this.date, this.availableDates);
           } else if (this.availableDates.length > 0) {
-            this.dateOption = this.availableDates[0];
+            this.date = this.availableDates[0];
           }
         },
         checkCompareDate() {
           if (this.date) {
-            this.compareDateOption = dates.findClosest(this.date, this.availableCompareDates);
+            this.compareDate = dates.findClosest(this.date, this.availableCompareDates);
           } else if (this.compareDate) {
-            this.compareDateOption = dates.findClosest(this.compareDate, this.availableCompareDates);
+            this.compareDate = dates.findClosest(this.compareDate, this.availableCompareDates);
           } else if (this.availableCompareDates.length > 0) {
-            this.compareDateOption = this.availableCompareDates[0];
+            this.compareDate = this.availableCompareDates[0];
           }
         }
       },
       components: {
         ImageComparison,
-        SelectWithArrows
+        SelectWithArrows,
+        CategorySelect
       }
     }
 </script>
 
 <style lang="scss" scoped>
+    div.grid {
+        display: grid;
+        grid-template-columns: 200px auto;
+    }
+
     div.imageContainer {
         min-height: 570px;
         img {
@@ -193,10 +181,6 @@
     .hint {
         margin-top: 10px;
         color: rgba(0, 0, 0, 0.54)
-    }
-
-    div.dataSelect {
-        margin-top: 20px;
     }
 
     div.dateSelect {
