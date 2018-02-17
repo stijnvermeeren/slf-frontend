@@ -86,10 +86,10 @@
       },
       computed: {
         imageUrl() {
-          return this.$store.getters.imageUrl(this.year, this.category, this.date);
+          return this.$store.getters.imageUrl(this.year, this.category, 'optimised', this.date);
         },
         compareImageUrl() {
-          return this.$store.getters.imageUrl(this.compareYear, this.category, this.compareDate);
+          return this.$store.getters.imageUrl(this.compareYear, this.category, 'optimised', this.compareDate);
         },
         yearsOptions() {
           return this.$store.getters.years.map(this.yearToOption).reverse();

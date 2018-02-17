@@ -44,7 +44,7 @@
     },
     methods: {
       imageUrl(category) {
-        return this.$store.getters.imageUrl(this.year, category, this.nearestDate(category));
+        return this.$store.getters.imageUrl(this.year, category, 'thumb', this.nearestDate(category));
       },
       nearestDate(category) {
         const availableDates = this.$store.getters.availableDates(this.year, category);

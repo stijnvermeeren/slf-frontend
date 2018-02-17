@@ -25,18 +25,15 @@ export default new Vuex.Store({
         return [];
       }
     },
-    imageUrl: state => (year, category, dateString) => {
+    imageUrl: state => (year, category, sizeType, dateString) => {
       if (state.images[year] && state.images[year][category]) {
-        const fileName = state.images[year][category].find(
-          fileName => fileName.split(".")[0] === dateString
-        );
-
-        if (fileName) {
+        if (state.images[year][category].includes(dateString)) {
           return [
             "https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be",
             year,
             category,
-            fileName
+            sizeType,
+            dateString + '.png'
           ].join("/");
         }
       }
