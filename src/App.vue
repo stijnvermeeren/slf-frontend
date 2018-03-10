@@ -1,7 +1,18 @@
 <template>
   <div id="container">
-    <div v-if="initialYear && initialCategory && initialDate">
-      <Viewer :initialYear="initialYear" :initialCategory="initialCategory" :initialDate="initialDate"></Viewer>
+    <div class="current">
+      <div class="label">
+        <a href="https://www.slf.ch/de/lawinenbulletin-und-schneesituation.html#schneedeckewetter">
+          Current avalanche bulletin on slf.ch
+        </a>
+      </div>
+      <a href="https://www.slf.ch/de/lawinenbulletin-und-schneesituation.html#lawinengefahr">
+        <img src="http://www.slf.ch/avalanche/bki/bki_de_c_teaser.gif" alt="Current avalanche forecast from slf.ch" />
+      </a>
+    </div>
+    <h2>Stijn's SLF Map Viewer</h2>
+    <div v-if="loaded">
+      <Viewer :initialDate="new Date()"></Viewer>
     </div>
     <div v-else>
       Loading...
@@ -24,22 +35,13 @@
   import Viewer from './Viewer.vue'
 
   export default {
-    data() {
-      return {
-        initialCategory: 'depth'
-      }
-    },
-    computed: {
-      initialYear() {
-        return this.$store.getters.currentYear;
-      },
-      initialDate() {
-        const availableDates = this.$store.getters.availableDates(this.initialYear, this.initialCategory);
-        return availableDates[availableDates.length - 1];
-      }
-    },
     components: {
       Viewer
+    },
+    computed: {
+      loaded() {
+        return this.$store.getters.years.length > 0
+      }
     },
     created() {
       this.$ga.page('/');
@@ -49,8 +51,19 @@
 </script>
 
 <style lang="scss">
+  /* Keen-ui fix for z-index of UiSwitch which otherwise interferes with the overlay */
+  .ui-switch {
+    .ui-switch__track {
+      z-index: 0;
+    }
+    .ui-switch__thumb {
+      z-index: 1;
+    }
+  }
+
   div#container {
-    width: 1000px;
+    position: relative;
+    width: 800px;
     margin: 0 auto;
   }
 
@@ -70,6 +83,26 @@
     -ms-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
+  }
+
+  div.current {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    padding: 5px;
+    background-color: rgba(33, 150, 243, .3);
+    border-radius: 5px;
+
+    text-align: center;
+
+    div.label {
+      font-weight: bold;
+      font-size: 70%;
+    }
+    img {
+      width: 160px;
+    }
   }
 
   div.about {

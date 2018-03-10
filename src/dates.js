@@ -29,18 +29,28 @@ export default {
     return bestMatch;
   },
 
-  fullFormat(dateString) {
-    const date = moment(dateString);
-    const dateFormat = date.format("D MMMM YYYY");
-    const daysAgo = moment().startOf('day').diff(date, 'days');
+  fullFormat(date) {
+    const momentDate = moment(date).startOf("day");
+    const dateFormat = momentDate.format("D MMMM YYYY");
+    const daysAgo = moment().startOf('day').diff(momentDate, 'days');
     if (daysAgo === 0) {
       return dateFormat + ' (today)';
-    } else if (daysAgo === 1) {
-      return dateFormat + ' (yesterday)';
-    } else if (daysAgo <= 7) {
-      return dateFormat + ' (' + daysAgo + ' days ago)';
     } else {
       return dateFormat;
     }
+  },
+
+  year(dateString) {
+    const givenDate = moment(dateString);
+    const august1st = givenDate.clone().startOf("year").add(7, "months");
+    return august1st.isAfter(givenDate) ? august1st.get("year") : august1st.get("year") + 1;
+  },
+
+  dateToIso(date) {
+    return date.toISOString().substr(0,10);
+  },
+
+  equals(date1, date2) {
+    return this.dateToIso(date1) === this.dateToIso(date2);
   }
 }
