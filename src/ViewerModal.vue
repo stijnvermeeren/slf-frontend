@@ -28,7 +28,6 @@
 </template>
 
 <script>
-  import moment from 'moment';
   import dates from './dates';
   import ImageComparison from './ImageComparison.vue';
 

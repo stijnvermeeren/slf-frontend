@@ -21,7 +21,6 @@
 </template>
 
 <script>
-    import moment from 'moment';
     import dates from './dates';
     import ImageGrid from './ImageGrid.vue';
 
