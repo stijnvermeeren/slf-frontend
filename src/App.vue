@@ -7,7 +7,7 @@
         </a>
       </div>
       <a href="https://www.slf.ch/de/lawinenbulletin-und-schneesituation.html#lawinengefahr">
-        <img src="http://www.slf.ch/avalanche/bki/bki_de_c_teaser.gif" alt="Current avalanche forecast from slf.ch" />
+        <img src="https://www.slf.ch/avalanche/bki/bki_de_c_teaser.gif" alt="Current avalanche forecast from slf.ch" />
       </a>
     </div>
     <h2>Stijn's SLF Map Viewer</h2>

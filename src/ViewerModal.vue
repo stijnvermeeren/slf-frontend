@@ -1,6 +1,6 @@
 <template>
-    <div class="overlay" @click="$emit('close')">
-        <div class="modal" @click.stop>
+    <div class="overlay" @mousedown="$emit('close')">
+        <div class="modal" @mousedown.stop>
             <ui-button @click="$emit('close')" iconPosition="right" icon="clear">Close</ui-button>
 
             <h2>{{fullDateString}}</h2>
