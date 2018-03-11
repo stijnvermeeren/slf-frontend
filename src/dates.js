@@ -14,15 +14,6 @@ export default {
     }
   },
 
-  year(date) {
-    // 7 = August
-    if (date.getMonth() < 7) {
-      return date.getFullYear();
-    } else {
-      return date.getFullYear() + 1;
-    }
-  },
-
   dateToIso(date) {
     return date.toISOString().substr(0,10);
   },
