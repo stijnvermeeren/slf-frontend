@@ -53,10 +53,10 @@
         return new Set(this.$store.getters.availableIsoDateStrings(this.category));
       },
       imageUrl() {
-        return this.$store.getters.imageUrl(dates.year(this.date), this.category, 'optimised', this.fileName);
+        return this.$store.getters.imageUrl(this.category, 'optimised', this.fileName);
       },
       compareImageUrl() {
-        return this.$store.getters.compareImageUrl(dates.year(this.compareDate), this.category, dates.dateToIso(this.compareDate));
+        return this.$store.getters.compareImageUrl(this.category, dates.dateToIso(this.compareDate));
       }
     },
     methods: {

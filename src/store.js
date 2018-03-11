@@ -5,43 +5,34 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    isLoaded: false,
     images: {}
   },
   getters: {
-    years: state => {
-      return Object.keys(state.images).sort().map(Number);
-    },
-    currentYear: (state, getters) => {
-      let years = getters.years;
-      return years[years.length - 1];
-    },
-    availableIsoDateStrings: (state, getters) => category => {
+    availableIsoDateStrings: (state) => category => {
       const result = [];
 
-      getters.years.forEach(year => {
-        if (state.images[year] && state.images[year][category]) {
-          return state.images[year][category].forEach( fileName => {
-            // remove the file extension from the date-named image
-            result.push(fileName.split(".")[0]);
-          });
-        }
-      });
+      if (state.images[category]) {
+        return state.images[category].forEach( fileName => {
+          // remove the file extension from the date-named image
+          result.push(fileName.split(".")[0]);
+        });
+      }
 
       return result;
     },
-    imageUrl: state => (year, category, sizeType, fileName) => {
+    imageUrl: state => (category, sizeType, fileName) => {
       return [
         "https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be",
-        year,
         category,
         sizeType,
         fileName + '.png'
       ].join("/");
     },
-    compareImageUrl: (state, getters) => (year, category, dateString) => {
-      if (state.images[year] && state.images[year][category]) {
-        if (state.images[year][category].includes(dateString)) {
-          return getters.imageUrl(year, category, 'optimised', dateString)
+    compareImageUrl: (state, getters) => (category, dateString) => {
+      if (state.images && state.images[category]) {
+        if (state.images[category].includes(dateString)) {
+          return getters.imageUrl(category, 'optimised', dateString)
         }
       }
 
@@ -50,9 +41,9 @@ export default new Vuex.Store({
        */
       return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAHECAQAAAAD5VNPAAAET0lEQVR42u3UQQEAAAQEMNc/knCU8LOFWHoK4KUIEBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECAgQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQICBAAQICBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAgIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEBAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQEKEBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECAgQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQICAAAUICBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAgIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQEKAAAQECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBAQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAgAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAgIUICBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAABcWqpoOWom2pKMAAAAASUVORK5CYII=";
     },
-    fileNames: state => (year, category, dateString) => {
-      if (state.images[year] && state.images[year][category]) {
-        return state.images[year][category]
+    fileNames: state => (category, dateString) => {
+      if (state.images[category]) {
+        return state.images[category]
           .filter(fileName => fileName.startsWith(dateString))
           .sort((a, b) => Number(a.substr(11)) > Number(b.substr(11)) ? 1 : -1);
       } else {
@@ -62,7 +53,8 @@ export default new Vuex.Store({
   },
   mutations: {
     update(state, json) {
-      state.images = json
+      state.images = json;
+      state.isLoaded = true;
     }
   },
   actions: {

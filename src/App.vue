@@ -40,7 +40,7 @@
     },
     computed: {
       loaded() {
-        return this.$store.getters.years.length > 0
+        return this.$store.state.isLoaded;
       }
     },
     created() {

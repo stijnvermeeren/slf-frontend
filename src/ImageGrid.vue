@@ -95,10 +95,10 @@
         return dates.fullFormat(date);
       },
       thumbUrl(category, date, fileName) {
-        return this.$store.getters.imageUrl(dates.year(date), category, 'thumb', fileName);
+        return this.$store.getters.imageUrl(category, 'thumb', fileName);
       },
       fileNames(category, date) {
-        return this.$store.getters.fileNames(dates.year(date), category, dates.dateToIso(date));
+        return this.$store.getters.fileNames(category, dates.dateToIso(date));
       },
       clickImage(category, date, fileName) {
         this.modalCategory = category;
