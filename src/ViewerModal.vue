@@ -6,15 +6,15 @@
             <h2>{{fullDateString}}</h2>
 
             <div class="imageContainer">
-                <div v-if="comparisonActive">
-                    <ImageComparison :image="imageUrl(date)" :date="date" :compareImage="imageUrl(compareDate)" :compareDate="compareDate"/>
+                <div v-if="comparisonEnabled && comparisonActive">
+                    <ImageComparison :image="imageUrl" :date="date" :compareImage="compareImageUrl" :compareDate="compareDate"/>
                 </div>
                 <div v-else>
-                    <img :src="imageUrl(date)" alt="Image" />
+                    <img :src="imageUrl" alt="Image" />
                 </div>
             </div>
 
-            <div class="dateSelect">
+            <div v-if="comparisonEnabled" class="dateSelect">
                 <ui-switch v-model="comparisonActive">Compare with a different date</ui-switch>
                 <div v-if="comparisonActive">
                     <ui-datepicker v-model="compareDate" :max-date="new Date()" :dateFilter="isDateAvailable">
@@ -36,7 +36,7 @@
     components: {
       ImageComparison
     },
-    props: ['date', 'category'],
+    props: ['date', 'category', 'fileName'],
     data() {
       return {
         comparisonActive: false,
@@ -44,11 +44,20 @@
       }
     },
     computed: {
+      comparisonEnabled() {
+        return this.category !== 'risk';
+      },
       fullDateString() {
         return dates.fullFormat(this.date);
       },
       availableIsoDateStrings() {
         return new Set(this.$store.getters.availableIsoDateStrings(this.category));
+      },
+      imageUrl() {
+        return this.$store.getters.imageUrl(dates.year(this.date), this.category, 'optimised', this.fileName);
+      },
+      compareImageUrl() {
+        return this.$store.getters.compareImageUrl(dates.year(this.compareDate), this.category, dates.dateToIso(this.compareDate));
       }
     },
     methods: {
@@ -58,19 +67,6 @@
       },
       isDateAvailable(date) {
         return this.availableIsoDateStrings.has(dates.dateToIso(date))
-      },
-      imageUrl(date) {
-        const fromStore = this.$store.getters.imageUrl(dates.year(date), this.category, 'optimised', dates.dateToIso(date));
-
-        if (fromStore) {
-          return fromStore;
-        } else {
-          /**
-           * Uniform gray fallback image, generated from http://png-pixel.com/ with #dddddd, opacity=1, 640x452
-           */
-          return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAHECAQAAAAD5VNPAAAET0lEQVR42u3UQQEAAAQEMNc/knCU8LOFWHoK4KUIEBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECAgQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQICBAAQICBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAgIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEBAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQEKEBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECAgQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQICAAAUICBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAgIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQEKAAAQECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBAQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAgAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAgIUICBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAABcWqpoOWom2pKMAAAAASUVORK5CYII="
-        }
-
       }
     }
   }

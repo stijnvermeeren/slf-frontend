@@ -11,15 +11,15 @@
             <template v-for="category in categories">
                 <div class="label">{{category.label}}</div>
                 <div v-for="gridDate in gridDates">
-                    <img v-if="imageUrl(category.value, gridDate)"
-                         @click="clickImage(category.value, gridDate)"
-                         :src="imageUrl(category.value, gridDate)"
+                    <img v-for="fileName in fileNames(category.value, gridDate)"
+                         @click="clickImage(category.value, gridDate, fileName)"
+                         :src="thumbUrl(category.value, gridDate, fileName)"
                          :alt="category.label" />
                 </div>
             </template>
         </div>
 
-        <ViewerModal v-if="showModal" :category="modalCategory" :date="modalDate" @close="showModal = false"></ViewerModal>
+        <ViewerModal v-if="showModal" :category="modalCategory" :date="modalDate" :fileName="modalFileName" @close="showModal = false"></ViewerModal>
     </div>
 </template>
 
@@ -36,6 +36,7 @@
       return {
         modalCategory: undefined,
         modalDate: undefined,
+        modalFileName: undefined,
         showModal: false
       }
     },
@@ -63,6 +64,10 @@
       categories() {
         return [
           {
+            'value': 'risk',
+            'label': 'Avalanche risk levels'
+          },
+          {
             'value': '1day',
             'label': 'New snow 1 day'
           },
@@ -89,12 +94,16 @@
       dateFullFormat(date) {
         return dates.fullFormat(date);
       },
-      imageUrl(category, date) {
-        return this.$store.getters.imageUrl(dates.year(date), category, 'thumb', dates.dateToIso(date));
+      thumbUrl(category, date, fileName) {
+        return this.$store.getters.imageUrl(dates.year(date), category, 'thumb', fileName);
       },
-      clickImage(category, date) {
+      fileNames(category, date) {
+        return this.$store.getters.fileNames(dates.year(date), category, dates.dateToIso(date));
+      },
+      clickImage(category, date, fileName) {
         this.modalCategory = category;
         this.modalDate = date;
+        this.modalFileName = fileName;
         this.showModal = true;
       },
       isSelectedDate(date) {

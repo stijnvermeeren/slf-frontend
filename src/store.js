@@ -29,20 +29,35 @@ export default new Vuex.Store({
 
       return result;
     },
-    imageUrl: state => (year, category, sizeType, dateString) => {
+    imageUrl: state => (year, category, sizeType, fileName) => {
+      return [
+        "https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be",
+        year,
+        category,
+        sizeType,
+        fileName + '.png'
+      ].join("/");
+    },
+    compareImageUrl: (state, getters) => (year, category, dateString) => {
       if (state.images[year] && state.images[year][category]) {
         if (state.images[year][category].includes(dateString)) {
-          return [
-            "https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be",
-            year,
-            category,
-            sizeType,
-            dateString + '.png'
-          ].join("/");
+          return getters.imageUrl(year, category, 'optimised', dateString)
         }
       }
 
-      return undefined;
+      /**
+       * Uniform gray fallback image, generated from http://png-pixel.com/ with #dddddd, opacity=1, 640x452
+       */
+      return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAHECAQAAAAD5VNPAAAET0lEQVR42u3UQQEAAAQEMNc/knCU8LOFWHoK4KUIEBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECAgQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQICBAAQICBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAgIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEBAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQEKEBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECAgQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQICAAAUICBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAgIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQEKAAAQECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBAQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAgAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAgIUICBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAABcWqpoOWom2pKMAAAAASUVORK5CYII=";
+    },
+    fileNames: state => (year, category, dateString) => {
+      if (state.images[year] && state.images[year][category]) {
+        return state.images[year][category]
+          .filter(fileName => fileName.startsWith(dateString))
+          .sort((a, b) => Number(a.substr(11)) > Number(b.substr(11)) ? 1 : -1);
+      } else {
+        return [];
+      }
     }
   },
   mutations: {
