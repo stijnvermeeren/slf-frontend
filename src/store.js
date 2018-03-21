@@ -9,11 +9,11 @@ export default new Vuex.Store({
     images: {}
   },
   getters: {
-    availableIsoDateStrings: (state) => category => {
+    availableIsoDateStrings: state => category => {
       const result = [];
 
       if (state.images[category]) {
-        return state.images[category].forEach( fileName => {
+        state.images[category].forEach( fileName => {
           // remove the file extension from the date-named image
           result.push(fileName.split(".")[0]);
         });

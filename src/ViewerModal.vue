@@ -61,6 +61,8 @@
     },
     methods: {
       defaultCompareDate() {
+        // Can't use computed property here, since we are calling this method in data() where computed properties
+        // have not been initialised.
         const lastDate = this.$store.getters.availableIsoDateStrings(this.category).pop();
         return lastDate ? new Date(lastDate) : new Date();
       },
