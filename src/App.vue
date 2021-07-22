@@ -44,7 +44,7 @@
       }
     },
     created() {
-      this.$ga.page('/');
+      this.$gtag.pageview('/');
       this.$store.dispatch('load');
     },
   }
