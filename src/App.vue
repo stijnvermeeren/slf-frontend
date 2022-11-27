@@ -19,6 +19,7 @@
     </div>
     <div class="about">
       <h2>About</h2>
+      <p style="font-weight: bold;">Update: Since 2021, the SLF unfortunately does not publish the snow maps into their archive anymore. For this reason, this project is no longer functional.</p>
       <p>This web page aims to make the maps from the <a href="https://www.slf.ch/de/lawinenbulletin-und-schneesituation/archiv.html">SLF archive</a> more accessible, giving easy insights into questions like:</p>
       <ul>
         <li>How much snow is there compared to last year?</li>

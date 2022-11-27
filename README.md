@@ -1,5 +1,11 @@
 # SLF map viewer
 
+## Project defunct
+
+Since 2021, the SLF unfortunately does not publish the snow maps into their archive anymore. For this reason, this project is no longer functional.
+
+## Old info
+
 **Visit the web page at [https://stijnvermeeren.be/slf](https://stijnvermeeren.be/slf).**
 
 The [SLF](https://www.slf.ch/en.html) is the Swiss institute for snow and avalanche research. Each winter, they regularly publish maps charting the snowfall and snow depth across Switzerland. This web page aims to make the maps from the [SLF archive](https://www.slf.ch/de/lawinenbulletin-und-schneesituation/archiv.html) more accessible, giving easy insights into questions like:
