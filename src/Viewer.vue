@@ -4,7 +4,16 @@
             <div>
                 <label class="date-label">
                     Pick date
-                    <input type="date" v-model="dateString" :max="maxDateString" />
+                    <div class="date-picker-wrap">
+                        <VueDatePicker
+                            v-model="date"
+                            :max-date="new Date()"
+                            auto-apply
+                            :time-config="{ enableTimePicker: false }"
+                            :formats="{ input: 'd MMMM yyyy' }"
+                            text-input
+                        />
+                    </div>
                 </label>
                 <div class="date-buttons">
                     <button @click="date = addYears(-1)">-1 year</button>
@@ -24,10 +33,13 @@
 <script>
     import dates from './dates';
     import ImageGrid from './ImageGrid.vue';
+    import { VueDatePicker } from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css';
 
     export default {
       components: {
-        ImageGrid
+        ImageGrid,
+        VueDatePicker
       },
       props: ['initialDate'],
       data() {
@@ -38,19 +50,6 @@
       computed: {
         todaySelected() {
           return dates.equals(this.date, new Date());
-        },
-        dateString: {
-          get() {
-            return dates.dateToIso(this.date);
-          },
-          set(value) {
-            if (value) {
-              this.date = new Date(value + 'T12:00:00');
-            }
-          }
-        },
-        maxDateString() {
-          return dates.dateToIso(new Date());
         }
       },
       methods: {
@@ -71,17 +70,15 @@
 </script>
 
 <style lang="scss" scoped>
-    input[type="date"] {
-        font-size: 14px;
-        padding: 6px 8px;
-        border: 1px solid #ccc;
-        border-radius: 2px;
-    }
-
     .date-label {
         display: block;
         font-size: 14px;
         margin-bottom: 8px;
+    }
+
+    .date-picker-wrap {
+        margin-top: 4px;
+        width: 268px;
     }
 
     .date-buttons {

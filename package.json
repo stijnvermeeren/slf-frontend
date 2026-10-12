@@ -9,6 +9,7 @@
     "start": "vite"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^14.0.0",
     "vue": "^3.3.4",
     "vue-gtag": "^2.0.3",
     "vuex": "^4.1.0"

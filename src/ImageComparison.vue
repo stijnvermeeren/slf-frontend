@@ -13,7 +13,7 @@
             :src="compareImage"
             :alt="dateLabel(compareDate)"
             class="compare-img"
-            :style="{ clipPath: `inset(0 ${100 - position}% 0 0)` }"
+            :style="{ clipPath: `inset(0 0 0 ${position}%)` }"
         />
         <div
             class="handle"

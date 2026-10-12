@@ -6,7 +6,7 @@
             <h2>{{fullDateString}}</h2>
 
             <div class="imageContainer">
-                <div v-if="comparisonEnabled && comparisonActive">
+                <div v-if="comparisonEnabled && comparisonActive && compareDate">
                     <ImageComparison :image="imageUrl" :date="date" :compareImage="compareImageUrl" :compareDate="compareDate"/>
                 </div>
                 <div v-else>
@@ -15,15 +15,20 @@
             </div>
 
             <div v-if="comparisonEnabled" class="dateSelect">
-                <label class="comparison-toggle">
-                    <input type="checkbox" v-model="comparisonActive" />
-                    Compare with a different date
-                </label>
+                <ToggleSwitch v-model="comparisonActive">Compare with a different date</ToggleSwitch>
                 <div v-if="comparisonActive">
-                    <label class="date-label">
+                    <div class="date-label">
                         Pick comparison date
-                        <input type="date" :value="compareDateString" @change="onCompareDateChange" :max="maxDateString" />
-                    </label>
+                        <VueDatePicker
+                            v-model="compareDate"
+                            :disabled-dates="isDateDisabled"
+                            :max-date="new Date()"
+                            :time-config="{ enableTimePicker: false }"
+                            :formats="{ input: 'd MMMM yyyy' }"
+                            text-input
+                            auto-apply
+                        />
+                    </div>
                     <div class="hint">Drag the slider to adjust the comparison</div>
                 </div>
             </div>
@@ -34,10 +39,15 @@
 <script>
   import dates from './dates';
   import ImageComparison from './ImageComparison.vue';
+  import ToggleSwitch from './ToggleSwitch.vue';
+  import { VueDatePicker } from '@vuepic/vue-datepicker';
+  import '@vuepic/vue-datepicker/dist/main.css';
 
   export default {
     components: {
-      ImageComparison
+      ImageComparison,
+      ToggleSwitch,
+      VueDatePicker
     },
     props: ['date', 'category', 'fileName'],
     data() {
@@ -60,13 +70,8 @@
         return this.$store.getters.imageUrl(this.category, 'optimised', this.fileName);
       },
       compareImageUrl() {
+        if (!this.compareDate) return null;
         return this.$store.getters.compareImageUrl(this.category, dates.dateToIso(this.compareDate));
-      },
-      compareDateString() {
-        return dates.dateToIso(this.compareDate);
-      },
-      maxDateString() {
-        return dates.dateToIso(new Date());
       }
     },
     methods: {
@@ -76,11 +81,8 @@
         const lastDate = this.$store.getters.availableIsoDateStrings(this.category).pop();
         return lastDate ? new Date(lastDate) : new Date();
       },
-      onCompareDateChange(e) {
-        const value = e.target.value;
-        if (value) {
-          this.compareDate = new Date(value + 'T12:00:00');
-        }
+      isDateDisabled(date) {
+        return !this.availableIsoDateStrings.has(dates.dateToIso(date));
       }
     }
   }
@@ -136,26 +138,11 @@
     div.dateSelect {
         margin-top: 10px;
 
-        .comparison-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
         .date-label {
             display: block;
             font-size: 14px;
             margin-top: 8px;
-        }
-
-        input[type="date"] {
-            font-size: 14px;
-            padding: 6px 8px;
-            border: 1px solid #ccc;
-            border-radius: 2px;
-            margin-left: 6px;
+            max-width: 268px;
         }
 
         .hint {
