@@ -105,7 +105,8 @@
             position: relative;
             margin: auto auto;
             width: 820px;
-            height: 820px;
+            max-height: 100vh;
+            overflow-y: auto;
             padding: 10px;
             background-color: white;
             cursor: auto;
