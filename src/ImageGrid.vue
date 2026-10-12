@@ -3,15 +3,17 @@
         <div class="grid">
             <div
                     v-for="gridDate in gridDates"
+                    :key="gridDate.getTime()"
                     :class="{ selected: isSelectedDate(gridDate) }"
             >
                 {{dateFullFormat(gridDate)}}
             </div>
 
-            <template v-for="category in categories">
+            <template v-for="category in categories" :key="category.value">
                 <div class="label">{{category.label}}</div>
-                <div v-for="gridDate in gridDates">
+                <div v-for="gridDate in gridDates" :key="gridDate.getTime()">
                     <img v-for="fileName in fileNames(category.value, gridDate)"
+                         :key="fileName"
                          @click="clickImage(category.value, gridDate, fileName)"
                          :src="thumbUrl(category.value, gridDate, fileName)"
                          :alt="category.label" />

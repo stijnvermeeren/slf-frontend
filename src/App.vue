@@ -2,13 +2,10 @@
   <div id="container">
     <div class="current">
       <div class="label">
-        <a href="https://www.slf.ch/de/lawinenbulletin-und-schneesituation.html#schneedeckewetter">
-          Current avalanche bulletin on slf.ch
+        <a href="https://whiterisk.ch/en/conditions">
+          Current avalanche bulletin on whiterisk.ch
         </a>
       </div>
-      <a href="https://www.slf.ch/de/lawinenbulletin-und-schneesituation.html#lawinengefahr">
-        <img src="https://www.slf.ch/avalanche/bki/bki_de_c_teaser.gif" alt="Current avalanche forecast from slf.ch" />
-      </a>
     </div>
     <h2>Stijn's SLF Map Viewer</h2>
     <div v-if="loaded">
@@ -52,16 +49,6 @@
 </script>
 
 <style lang="scss">
-  /* Keen-ui fix for z-index of UiSwitch which otherwise interferes with the overlay */
-  .ui-switch {
-    .ui-switch__track {
-      z-index: 0;
-    }
-    .ui-switch__thumb {
-      z-index: 1;
-    }
-  }
-
   div#container {
     position: relative;
     width: 800px;
@@ -99,10 +86,6 @@
 
     div.label {
       font-weight: bold;
-      font-size: 70%;
-    }
-    img {
-      width: 160px;
     }
   }
 

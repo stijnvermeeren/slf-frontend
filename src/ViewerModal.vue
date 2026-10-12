@@ -1,12 +1,12 @@
 <template>
     <div class="overlay" @mousedown="$emit('close')">
         <div class="modal" @mousedown.stop>
-            <ui-button @click="$emit('close')" iconPosition="right" icon="clear">Close</ui-button>
+            <button class="close-btn" @click="$emit('close')">✕ Close</button>
 
             <h2>{{fullDateString}}</h2>
 
             <div class="imageContainer">
-                <div v-if="comparisonEnabled && comparisonActive">
+                <div v-if="comparisonEnabled && comparisonActive && compareDate">
                     <ImageComparison :image="imageUrl" :date="date" :compareImage="compareImageUrl" :compareDate="compareDate"/>
                 </div>
                 <div v-else>
@@ -15,12 +15,21 @@
             </div>
 
             <div v-if="comparisonEnabled" class="dateSelect">
-                <ui-switch v-model="comparisonActive">Compare with a different date</ui-switch>
+                <ToggleSwitch v-model="comparisonActive">Compare with a different date</ToggleSwitch>
                 <div v-if="comparisonActive">
-                    <ui-datepicker v-model="compareDate" :max-date="new Date()" :dateFilter="isDateAvailable">
+                    <div class="date-label">
                         Pick comparison date
-                    </ui-datepicker>
-                    <div class="hint">Click on the map to adjust the comparison</div>
+                        <VueDatePicker
+                            v-model="compareDate"
+                            :disabled-dates="isDateDisabled"
+                            :max-date="new Date()"
+                            :time-config="{ enableTimePicker: false }"
+                            :formats="{ input: 'd MMMM yyyy' }"
+                            text-input
+                            auto-apply
+                        />
+                    </div>
+                    <div class="hint">Drag the slider to adjust the comparison</div>
                 </div>
             </div>
         </div>
@@ -30,10 +39,15 @@
 <script>
   import dates from './dates';
   import ImageComparison from './ImageComparison.vue';
+  import ToggleSwitch from './ToggleSwitch.vue';
+  import { VueDatePicker } from '@vuepic/vue-datepicker';
+  import '@vuepic/vue-datepicker/dist/main.css';
 
   export default {
     components: {
-      ImageComparison
+      ImageComparison,
+      ToggleSwitch,
+      VueDatePicker
     },
     props: ['date', 'category', 'fileName'],
     data() {
@@ -56,6 +70,7 @@
         return this.$store.getters.imageUrl(this.category, 'optimised', this.fileName);
       },
       compareImageUrl() {
+        if (!this.compareDate) return null;
         return this.$store.getters.compareImageUrl(this.category, dates.dateToIso(this.compareDate));
       }
     },
@@ -66,8 +81,8 @@
         const lastDate = this.$store.getters.availableIsoDateStrings(this.category).pop();
         return lastDate ? new Date(lastDate) : new Date();
       },
-      isDateAvailable(date) {
-        return this.availableIsoDateStrings.has(dates.dateToIso(date))
+      isDateDisabled(date) {
+        return !this.availableIsoDateStrings.has(dates.dateToIso(date));
       }
     }
   }
@@ -95,10 +110,20 @@
             background-color: white;
             cursor: auto;
 
-            .ui-button {
+            .close-btn {
                 position: absolute;
                 top: 10px;
                 right: 10px;
+                padding: 6px 12px;
+                font-size: 13px;
+                cursor: pointer;
+                border: 1px solid #bdbdbd;
+                border-radius: 2px;
+                background: #fff;
+
+                &:hover {
+                    background: #f5f5f5;
+                }
             }
         }
     }
@@ -111,6 +136,15 @@
     }
 
     div.dateSelect {
+        margin-top: 10px;
+
+        .date-label {
+            display: block;
+            font-size: 14px;
+            margin-top: 8px;
+            max-width: 268px;
+        }
+
         .hint {
             margin-top: 10px;
             color: rgba(0, 0, 0, 0.54)

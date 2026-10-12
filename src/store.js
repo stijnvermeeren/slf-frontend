@@ -1,9 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default createStore({
   state: {
     isLoaded: false,
     images: {}
@@ -23,7 +20,7 @@ export default new Vuex.Store({
     },
     imageUrl: state => (category, sizeType, fileName) => {
       return [
-        "https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be",
+        "https://s3.eu-central-1.amazonaws.com/slf-726299224968-eu-central-1-an",
         category,
         sizeType,
         fileName + '.png'
@@ -62,7 +59,7 @@ export default new Vuex.Store({
       /**
        * Format: {"2014":{"relative":["2013-11-28.gif","2013-12-05.gif",...],...},...}
        */
-      fetch('https://s3.eu-central-1.amazonaws.com/slf.stijnvermeeren.be/data.json').then(
+      fetch('https://s3.eu-central-1.amazonaws.com/slf-726299224968-eu-central-1-an/data.json').then(
         response => response.json()
       ).then(json => {
         context.commit('update', json);
