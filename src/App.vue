@@ -52,16 +52,6 @@
 </script>
 
 <style lang="scss">
-  /* Keen-ui fix for z-index of UiSwitch which otherwise interferes with the overlay */
-  .ui-switch {
-    .ui-switch__track {
-      z-index: 0;
-    }
-    .ui-switch__thumb {
-      z-index: 1;
-    }
-  }
-
   div#container {
     position: relative;
     width: 800px;

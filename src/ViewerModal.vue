@@ -1,7 +1,7 @@
 <template>
     <div class="overlay" @mousedown="$emit('close')">
         <div class="modal" @mousedown.stop>
-            <ui-button @click="$emit('close')" iconPosition="right" icon="clear">Close</ui-button>
+            <button class="close-btn" @click="$emit('close')">✕ Close</button>
 
             <h2>{{fullDateString}}</h2>
 
@@ -15,12 +15,16 @@
             </div>
 
             <div v-if="comparisonEnabled" class="dateSelect">
-                <ui-switch v-model="comparisonActive">Compare with a different date</ui-switch>
+                <label class="comparison-toggle">
+                    <input type="checkbox" v-model="comparisonActive" />
+                    Compare with a different date
+                </label>
                 <div v-if="comparisonActive">
-                    <ui-datepicker v-model="compareDate" :max-date="new Date()" :dateFilter="isDateAvailable">
+                    <label class="date-label">
                         Pick comparison date
-                    </ui-datepicker>
-                    <div class="hint">Click on the map to adjust the comparison</div>
+                        <input type="date" :value="compareDateString" @change="onCompareDateChange" :max="maxDateString" />
+                    </label>
+                    <div class="hint">Drag the slider to adjust the comparison</div>
                 </div>
             </div>
         </div>
@@ -57,6 +61,12 @@
       },
       compareImageUrl() {
         return this.$store.getters.compareImageUrl(this.category, dates.dateToIso(this.compareDate));
+      },
+      compareDateString() {
+        return dates.dateToIso(this.compareDate);
+      },
+      maxDateString() {
+        return dates.dateToIso(new Date());
       }
     },
     methods: {
@@ -66,8 +76,11 @@
         const lastDate = this.$store.getters.availableIsoDateStrings(this.category).pop();
         return lastDate ? new Date(lastDate) : new Date();
       },
-      isDateAvailable(date) {
-        return this.availableIsoDateStrings.has(dates.dateToIso(date))
+      onCompareDateChange(e) {
+        const value = e.target.value;
+        if (value) {
+          this.compareDate = new Date(value + 'T12:00:00');
+        }
       }
     }
   }
@@ -95,10 +108,20 @@
             background-color: white;
             cursor: auto;
 
-            .ui-button {
+            .close-btn {
                 position: absolute;
                 top: 10px;
                 right: 10px;
+                padding: 6px 12px;
+                font-size: 13px;
+                cursor: pointer;
+                border: 1px solid #bdbdbd;
+                border-radius: 2px;
+                background: #fff;
+
+                &:hover {
+                    background: #f5f5f5;
+                }
             }
         }
     }
@@ -111,6 +134,30 @@
     }
 
     div.dateSelect {
+        margin-top: 10px;
+
+        .comparison-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .date-label {
+            display: block;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        input[type="date"] {
+            font-size: 14px;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            margin-left: 6px;
+        }
+
         .hint {
             margin-top: 10px;
             color: rgba(0, 0, 0, 0.54)
